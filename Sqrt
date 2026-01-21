@@ -1,0 +1,117 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+=================================================
+INTEGER SQUARE ROOT – ALL APPROACHES
+=================================================
+Given a non-negative integer x,
+return the integer square root of x
+(i.e., floor(sqrt(x))).
+
+-------------------------------------------------
+APPROACH 1: BRUTE FORCE
+-------------------------------------------------
+Idea:
+- Try all numbers from 1 to x
+- Find the largest i such that i*i <= x
+
+Time Complexity (TC): O(x)
+Space Complexity (SC): O(1)
+*/
+
+int sqrtBrute(int x) {
+    int ans = 0;
+    for (int i = 1; i <= x; i++) {
+        if (1LL * i * i <= x)
+            ans = i;
+        else
+            break;
+    }
+    return ans;
+}
+
+/*
+-------------------------------------------------
+APPROACH 2: BETTER
+-------------------------------------------------
+Idea:
+- Use binary search on range [0, x]
+- Store last valid mid whose square <= x
+
+Time Complexity (TC): O(log x)
+Space Complexity (SC): O(1)
+*/
+
+int sqrtBetter(int x) {
+    int s = 0, e = x;
+    int ans = 0;
+
+    while (s <= e) {
+        int mid = s + (e - s) / 2;
+        long long sq = 1LL * mid * mid;
+
+        if (sq == x)
+            return mid;
+        else if (sq < x) {
+            ans = mid;
+            s = mid + 1;
+        } else {
+            e = mid - 1;
+        }
+    }
+    return ans;
+}
+
+/*
+-------------------------------------------------
+APPROACH 3: OPTIMAL
+-------------------------------------------------
+Idea:
+- Binary search with reduced upper bound
+- sqrt(x) never exceeds x/2 (for x > 1)
+
+Time Complexity (TC): O(log x)
+Space Complexity (SC): O(1)
+*/
+
+int sqrtOptimal(int x) {
+    if (x < 2) return x;
+
+    int s = 1, e = x / 2;
+    int ans = 0;
+
+    while (s <= e) {
+        int mid = s + (e - s) / 2;
+        long long sq = 1LL * mid * mid;
+
+        if (sq == x)
+            return mid;
+        else if (sq < x) {
+            ans = mid;
+            s = mid + 1;
+        } else {
+            e = mid - 1;
+        }
+    }
+    return ans;
+}
+
+/*
+====================
+LEETCODE STYLE CLASS
+====================
+*/
+
+class Solution {
+public:
+    int integerSquareRoot(int x) {
+        return sqrtOptimal(x);
+    }
+};
+
+/*
+====================
+END OF FILE
+====================
+*/
