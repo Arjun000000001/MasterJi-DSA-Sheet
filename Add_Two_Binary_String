@@ -1,0 +1,118 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+=================================================
+ADD BINARY STRINGS – ALL APPROACHES
+=================================================
+Given two binary strings a and b,
+return their sum as a binary string.
+
+-------------------------------------------------
+APPROACH 1: BRUTE FORCE
+-------------------------------------------------
+Idea:
+- Convert binary strings to decimal
+- Add them
+- Convert result back to binary
+
+NOTE:
+- This approach is NOT safe for large inputs
+- Used only for understanding
+
+Time Complexity (TC): O(n)
+Space Complexity (SC): O(1)
+*/
+
+string addBinaryBrute(string a, string b) {
+    long long x = stoll(a, nullptr, 2);
+    long long y = stoll(b, nullptr, 2);
+
+    long long sum = x + y;
+
+    if (sum == 0) return "0";
+
+    string ans = "";
+    while (sum > 0) {
+        ans.push_back((sum % 2) + '0');
+        sum /= 2;
+    }
+
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+
+/*
+-------------------------------------------------
+APPROACH 2: BETTER
+-------------------------------------------------
+Idea:
+- Traverse both strings from right to left
+- Add digit by digit with carry
+- Use extra reverse at the end
+
+Time Complexity (TC): O(n)
+Space Complexity (SC): O(n)
+*/
+
+string addBinaryBetter(string a, string b) {
+    string ans = "";
+    int i = a.size() - 1;
+    int j = b.size() - 1;
+    int carry = 0;
+
+    while (i >= 0 || j >= 0) {
+        int sum = carry;
+
+        if (i >= 0) sum += a[i--] - '0';
+        if (j >= 0) sum += b[j--] - '0';
+
+        ans.push_back((sum % 2) + '0');
+        carry = sum / 2;
+    }
+
+    if (carry)
+        ans.push_back('1');
+
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+
+/*
+-------------------------------------------------
+APPROACH 3: OPTIMAL
+-------------------------------------------------
+Idea:
+- Same digit-by-digit addition
+- Loop continues while carry exists
+- Clean and interview-accepted solution
+
+Time Complexity (TC): O(n)
+Space Complexity (SC): O(n)
+*/
+
+string addBinaryOptimal(string a, string b) {
+    string ans = "";
+    int i = a.size() - 1;
+    int j = b.size() - 1;
+    int carry = 0;
+
+    while (i >= 0 || j >= 0 || carry) {
+        int sum = carry;
+
+        if (i >= 0) sum += a[i--] - '0';
+        if (j >= 0) sum += b[j--] - '0';
+
+        ans.push_back((sum % 2) + '0');
+        carry = sum / 2;
+    }
+
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+
+/*
+====================
+END OF FILE
+====================
+*/
