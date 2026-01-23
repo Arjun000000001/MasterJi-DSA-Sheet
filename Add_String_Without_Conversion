@@ -1,0 +1,137 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+=================================================
+ADD STRINGS – BRUTE, BETTER, OPTIMAL
+=================================================
+Problem:
+Given two non-negative integers num1 and num2
+represented as strings, return their sum as a string.
+
+Constraint:
+- You must NOT convert the entire string into an integer
+  using stoi, stoll, etc.
+
+-------------------------------------------------
+1) BRUTE FORCE APPROACH
+-------------------------------------------------
+Idea:
+- Convert both strings to integers
+- Add them
+- Convert result back to string
+
+Why this is BAD:
+- Violates problem constraint
+- Causes overflow for large numbers
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+*/
+
+string addStringsBrute(string num1, string num2) {
+    long long n1 = stoll(num1);   // ❌ not allowed
+    long long n2 = stoll(num2);   // ❌ not allowed
+    long long sum = n1 + n2;
+    return to_string(sum);
+}
+
+/*
+-------------------------------------------------
+2) BETTER APPROACH
+-------------------------------------------------
+Idea:
+- Manually build numbers digit by digit
+- Then add them
+
+Why this is STILL BAD:
+- Still converts full strings into numbers
+- Still overflows for very large input
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+*/
+
+string addStringsBetter(string num1, string num2) {
+
+    long long n1 = 0;
+    for (char c : num1) {
+        n1 = n1 * 10 + (c - '0');   // ❌ full number creation
+    }
+
+    long long n2 = 0;
+    for (char c : num2) {
+        n2 = n2 * 10 + (c - '0');   // ❌ full number creation
+    }
+
+    long long sum = n1 + n2;
+    return to_string(sum);
+}
+
+/*
+-------------------------------------------------
+3) OPTIMAL APPROACH (INTERVIEW CORRECT)
+-------------------------------------------------
+Idea:
+- Add digit by digit from right to left
+- Maintain carry
+- Never build full numbers
+
+Why this is CORRECT:
+- No integer conversion
+- No overflow
+- Follows problem constraints
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+*/
+
+string addStringsOptimal(string num1, string num2) {
+
+    int i = num1.size() - 1;
+    int j = num2.size() - 1;
+    int carry = 0;
+
+    string result = "";
+
+    while (i >= 0 || j >= 0 || carry) {
+
+        int digit1 = 0;
+        int digit2 = 0;
+
+        if (i >= 0) {
+            digit1 = num1[i] - '0';
+            i--;
+        }
+
+        if (j >= 0) {
+            digit2 = num2[j] - '0';
+            j--;
+        }
+
+        int sum = digit1 + digit2 + carry;
+        carry = sum / 10;
+
+        result.push_back((sum % 10) + '0');
+    }
+
+    reverse(result.begin(), result.end());
+    return result;
+}
+
+/*
+-------------------------------------------------
+DRIVER CODE (OPTIONAL)
+-------------------------------------------------
+*/
+
+int main() {
+    string a = "456";
+    string b = "77";
+
+    cout << "Brute:   " << addStringsBrute(a, b) << endl;
+    cout << "Better:  " << addStringsBetter(a, b) << endl;
+    cout << "Optimal: " << addStringsOptimal(a, b) << endl;
+
+    return 0;
+}
